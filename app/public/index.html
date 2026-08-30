@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nährwert-Tagebuch</title>
+<meta name="description" content="Dein persönliches Ernährungstagebuch – Proteine, Ballaststoffe, Fett und Zucker pro Mahlzeit und pro Tag im Blick.">
+<meta name="theme-color" content="#2c5943">
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/assets/icon.png">
+<link rel="apple-touch-icon" href="/assets/icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="NährBuch">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark" aria-hidden="true"></span>
+    <div>
+      <h1>NährBuch</h1>
+      <p class="tagline">Dein Ernährungstagebuch</p>
+    </div>
+  </div>
+  <button id="settingsBtn" class="icon-btn" title="Tagesziele anpassen" aria-label="Einstellungen">
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+  </button>
+</header>
+
+<main class="wrap">
+
+  <section class="daynav">
+    <button id="prevDay" class="nav-btn" aria-label="Vorheriger Tag">‹</button>
+    <div class="day-label">
+      <span id="dayLabel">Heute</span>
+      <span id="dayDate" class="day-date"></span>
+    </div>
+    <button id="nextDay" class="nav-btn" aria-label="Nächster Tag">›</button>
+  </section>
+
+  <section class="summary-card">
+    <h2 class="section-title">Tagesbilanz</h2>
+    <div class="macro-grid" id="macroGrid"><!-- filled by JS --></div>
+    <p class="kcal-line">Gesamt: <strong id="kcalTotal">0</strong> kcal</p>
+  </section>
+
+  <section class="meals" id="meals"><!-- filled by JS --></section>
+
+</main>
+
+<div class="modal-backdrop" id="settingsBackdrop">
+  <div class="modal" role="dialog" aria-labelledby="settingsTitle">
+    <h2 id="settingsTitle">Tagesziele</h2>
+    <p class="modal-hint">Passe die Richtwerte an – z. B. individuell je nach Kundin oder Kunde.</p>
+    <div class="goal-field">
+      <label for="goalProtein">Protein – Ziel pro Tag (g)</label>
+      <input type="number" id="goalProtein" min="0" step="1">
+    </div>
+    <div class="goal-field">
+      <label for="goalFiber">Ballaststoffe – Ziel pro Tag (g)</label>
+      <input type="number" id="goalFiber" min="0" step="1">
+    </div>
+    <div class="goal-field">
+      <label for="goalFett">Fett – Obergrenze pro Tag (g)</label>
+      <input type="number" id="goalFett" min="0" step="1">
+    </div>
+    <div class="goal-field">
+      <label for="goalZucker">Zucker – Obergrenze pro Tag (g)</label>
+      <input type="number" id="goalZucker" min="0" step="1">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-ghost" id="settingsCancel">Abbrechen</button>
+      <button class="btn-primary" id="settingsSave">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="customBackdrop">
+  <div class="modal" role="dialog" aria-labelledby="customTitle">
+    <h2 id="customTitle">Eigenes Lebensmittel</h2>
+    <p class="modal-hint">Werte jeweils pro 100 g.</p>
+    <div class="goal-field">
+      <label for="customName">Name</label>
+      <input type="text" id="customName" placeholder="z. B. Omas Auflauf">
+    </div>
+    <div class="custom-grid">
+      <div class="goal-field"><label for="customProtein">Protein (g)</label><input type="number" id="customProtein" min="0" step="0.1" value="0"></div>
+      <div class="goal-field"><label for="customFiber">Ballaststoffe (g)</label><input type="number" id="customFiber" min="0" step="0.1" value="0"></div>
+      <div class="goal-field"><label for="customFett">Fett (g)</label><input type="number" id="customFett" min="0" step="0.1" value="0"></div>
+      <div class="goal-field"><label for="customZucker">Zucker (g)</label><input type="number" id="customZucker" min="0" step="0.1" value="0"></div>
+      <div class="goal-field"><label for="customKcal">Kalorien (kcal)</label><input type="number" id="customKcal" min="0" step="1" value="0"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-ghost" id="customCancel">Abbrechen</button>
+      <button class="btn-primary" id="customSave">Übernehmen</button>
+    </div>
+  </div>
+</div>
+
+<script src="/js/foods.js"></script>
+<script src="/js/app.js"></script>
+</body>
+</html>
