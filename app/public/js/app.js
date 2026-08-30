@@ -12,6 +12,24 @@
 
   var STORE_PREFIX = "naehrbuch:day:";
   var GOALS_KEY = "naehrbuch:goals";
+  var CUSTOM_FOODS_KEY = "naehrbuch:customFoods";
+
+  function loadCustomFoods() {
+    try {
+      var raw = localStorage.getItem(CUSTOM_FOODS_KEY);
+      if (raw) return JSON.parse(raw);
+    } catch (e) {}
+    return [];
+  }
+
+  function saveCustomFood(food) {
+    var list = loadCustomFoods();
+    list.push(food);
+    try { localStorage.setItem(CUSTOM_FOODS_KEY, JSON.stringify(list)); } catch (e) {}
+  }
+
+  // merge previously saved custom foods into the searchable database once, on load
+  loadCustomFoods().forEach(function (f) { window.FOOD_DB.push(f); });
 
   var state = {
     date: new Date(),
@@ -335,6 +353,7 @@
       kcal: parseFloat(document.getElementById("customKcal").value) || 0
     };
     window.FOOD_DB.push(food); // available for rest of the session too
+    saveCustomFood(food); // and remembered on this device for next time
     var cb = customCallback;
     closeCustomModal();
     if (cb) cb(food);
